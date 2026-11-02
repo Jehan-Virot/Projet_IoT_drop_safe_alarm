@@ -1,0 +1,25 @@
+
+{
+    "name": "IoT_drop_safe_alarm",
+
+    "build": {
+        "dockerfile": "../dockerfile",
+        "context": "..",
+        "args": {
+            "USER_UID": "1000",
+            "USER_GID": "1000"
+        }
+    },
+
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+    "workspaceFolder": "/workspace",
+
+    "remoteUser": "jehan",
+
+    "appPort": [
+        "8000:8000",
+        "8002:8002"
+    ],
+
+    "forwardPorts": [8000, 8002]
+}

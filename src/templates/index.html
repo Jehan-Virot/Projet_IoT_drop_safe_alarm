@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Supervision IoT</title>
+
+    <link rel="stylesheet"
+          href="../static/index_style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Supervision IoT</h1>
+
+        <section>
+            <h3>État de la connexion</h3>
+            <p id="status">Vérification...</p>
+        </section>
+
+        <section>
+            <h3>Données reçues</h3>
+
+            <button onclick="refreshData()">
+                Actualiser
+            </button>
+
+            <pre id="data">Aucune donnée reçue.</pre>
+        </section>
+
+        <section>
+            <h3>Envoyer une commande</h3>
+
+            <input
+                type="text"
+                id="command"
+                placeholder="Exemple : LED_ON"
+            >
+
+            <button onclick="sendCommand()">
+                Envoyer
+            </button>
+
+            <p id="result"></p>
+        </section>
+
+    </div>
+
+    <script src="../static/index_script.js"></script>
+
+</body>
+</html>
