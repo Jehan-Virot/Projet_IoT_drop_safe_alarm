@@ -1,57 +1,56 @@
-
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Supervision IoT</title>
-
-    <link rel="stylesheet"
-          href="../static/index_style.css">
+    <title>Alarme de la boîte aux lettres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
 </head>
-
 <body>
 
-    <div class="container">
+    <main class="dashboard">
 
-        <h1>Supervision IoT</h1>
-
-        <section>
-            <h3>État de la connexion</h3>
-            <p id="status">Vérification...</p>
+        <!-- Module 1 : Alarme -->
+        <section class="module alarm-module">
+            <h1>Alarme de la boîte aux lettres</h1>
+            <p>Contrôle du système de surveillance</p>
+            <button id="alarmButton">Chargement...</button>
         </section>
 
-        <section>
-            <h3>Données reçues</h3>
+        <!-- Module 2 : Historique -->
+        <section class="module history-module">
+            <h2>Historique des événements</h2>
+            <button id="historyButton">Afficher l'historique</button>
 
-            <button onclick="refreshData()">
-                Actualiser
-            </button>
-
-            <pre id="data">Aucune donnée reçue.</pre>
+            <div id="history" hidden>
+                <ul id="historyList"></ul>
+            </div>
         </section>
 
-        <section>
-            <h3>Envoyer une commande</h3>
+        <!-- Module 3 : Graphiques -->
+        <section class="module graphs-module">
+            <h2>Statistiques</h2>
 
-            <input
-                type="text"
-                id="command"
-                placeholder="Exemple : LED_ON"
-            >
+            <div class="graphs">
+                <div class="graph">
+                    <h3>Tentatives de vol</h3>
+                    <img src="/graph/vols.png" alt="Historique des tentatives de vol">
+                </div>
 
-            <button onclick="sendCommand()">
-                Envoyer
-            </button>
+                <div class="graph">
+                    <h3>Récupérations</h3>
+                    <img src="/graph/recuperations.png" alt="Historique des récupérations">
+                </div>
 
-            <p id="result"></p>
+                <div class="graph">
+                    <h3>Dépôts</h3>
+                    <img src="/graph/depots.png" alt="Historique des dépôts">
+                </div>
+            </div>
         </section>
 
-    </div>
+    </main>
 
-    <script src="../static/index_script.js"></script>
-
+    <script src="{{ url_for('static', filename='index_script.js') }}"></script>
 </body>
 </html>

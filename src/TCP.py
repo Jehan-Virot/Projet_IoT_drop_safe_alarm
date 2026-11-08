@@ -6,8 +6,6 @@ from collections import deque
 
 
 class TCPHandler(socketserver.BaseRequestHandler):
-    """Gestion d'une connexion TCP avec une carte."""
-
     def handle(self):
         client = self.request
         address = self.client_address
@@ -51,8 +49,6 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
 
 class TCPServer:
-    """Serveur TCP permettant une communication bidirectionnelle."""
-
     def __init__(self, host="0.0.0.0", port=8002):
         self.host = host
         self.port = port
@@ -78,8 +74,6 @@ class TCPServer:
         self.thread = None
 
     def start(self):
-        """Démarre le serveur TCP dans un thread."""
-
         self.thread = threading.Thread(
             target=self.server.serve_forever,
             daemon=True
@@ -90,21 +84,15 @@ class TCPServer:
         print(f"[TCP] Serveur actif sur {self.host}:{self.port}")
 
     def stop(self):
-        """Arrête le serveur TCP."""
-
         self.server.shutdown()
         self.server.server_close()
 
         print("[TCP] Serveur arrêté")
 
     def read(self):
-        """Retourne les messages reçus."""
-
         return list(self.messages)
 
     def write(self, data):
-        """Envoie une commande à toutes les cartes connectées."""
-
         if not isinstance(data, str) or not data.strip():
             return False
 
@@ -125,7 +113,5 @@ class TCPServer:
         return sent > 0
 
     def is_connected(self):
-        """Indique si au moins une carte est connectée."""
-
         with self.clients_lock:
             return len(self.clients) > 0
