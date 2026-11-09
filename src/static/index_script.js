@@ -2,6 +2,7 @@ const alarmButton = document.getElementById("alarmButton");
 const historyButton = document.getElementById("historyButton");
 const historySection = document.getElementById("history");
 const historyList = document.getElementById("historyList");
+const letterCount = document.getElementById("letterCount");
 
 // Mise à jour de l'état de l'alarme
 async function refreshData() {
@@ -67,6 +68,17 @@ historyButton.addEventListener("click", async () => {
         historyList.innerHTML = "<li>Impossible de charger l'historique.</li>";
     }
 });
+async function refreshLetters() {
+    try {
+        const response = await fetch("/api/letters");
+        const data = await response.json();
 
+        letterCount.textContent = data.count;
+    } catch (error) {
+        letterCount.textContent = "?";
+    }
+}
+refreshLetters();
+setInterval(refreshLetters, 2000);
 refreshData();
 setInterval(refreshData, 1000);

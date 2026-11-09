@@ -142,3 +142,31 @@ button:disabled {
         font-size: 23px;
     }
 }
+
+.letter-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    width: fit-content;
+    margin: 25px auto 0;
+    padding: 15px 30px;
+
+    background-color: #1c2029;
+    border-radius: 10px;
+}
+
+.letter-counter > span {
+    font-size: 32px;
+}
+
+.letter-counter p {
+    margin: 0 0 5px;
+    color: #aeb6c4;
+}
+
+.letter-counter strong {
+    font-size: 28px;
+    color: #65a5ff;
+}

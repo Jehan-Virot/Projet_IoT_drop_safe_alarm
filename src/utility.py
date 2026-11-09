@@ -52,3 +52,26 @@ def trim_csv(filename, max_rows=500):
         writer = csv.writer(file)
         writer.writerow(header)
         writer.writerows(recent_rows)
+        
+        
+import csv
+import os
+
+def count_letters():
+    path = "data/lettres.csv"
+    if not os.path.exists(path):
+        return 0
+    
+    with open(path, "r", newline="") as file:
+        events = list(csv.DictReader(file))
+    events.sort(key=lambda x: x["date"])
+    
+    count = 0
+    for event in events:
+        if event["event"] == "Dépôt de lettre":
+            count += 1
+
+        elif event["event"] == "Récupération du courrier":
+            count = 0
+
+    return count

@@ -1,15 +1,18 @@
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from TCP import TCPServer
-from utility import log_event, clear_csv
+from utility import log_event, clear_csv, count_letters
 import json
 import csv
 import os
+import time
 from graphs import update_graphs
+
 MAXIMUM = 260 #maximum du TOF qui sera changer dynamiquement
 TOF_HISTORY = []      #historique des 20 dernières mesure pour changer le maximum dynamiquement
 READ_HISTORY = None   #attend 5 fois après une detection d'une lettre au cas ou le pir detecte en retard la main
 LAST_PROCESSED_MESSAGE = None #juste le dernier message qu'on a lus dans read_tcp pour eviter de traiter plusieurs fois un messages
-
+LAST_RECUPERATION_TIME = 0
+LAST_VOL_TIME = 0
 app = Flask(__name__)
 
 tcp = TCPServer(host="0.0.0.0", port=8002)
@@ -26,7 +29,7 @@ def read_tcp():
 
     global MAXIMUM, READ_HISTORY
     global TOF_HISTORY, LAST_PROCESSED_MESSAGE
-
+    global LAST_RECUPERATION_TIME, LAST_VOL_TIME
     messages = tcp.read()
 
     if not messages:
@@ -52,39 +55,46 @@ def read_tcp():
     if fingerprint != LAST_PROCESSED_MESSAGE:
         LAST_PROCESSED_MESSAGE = fingerprint
         
-        #VOLS
+        #vols
         if on == 1 and pir == 1:
-            log_event("vol", "Tentative de vol", last_message)
-            update_graphs("vol")
+            if time.monotonic() - LAST_VOL_TIME >= 3:
+                log_event("vol", "Tentative de vol", last_message)
+                update_graphs("vol")
+                LAST_VOL_TIME = time.monotonic()
             READ_HISTORY = None
-
+            
         #detection des depots
         elif READ_HISTORY is not None:
             READ_HISTORY.append(last_message)
             if pir == 1 and on == 1:
-                log_event("vol", "Tentative de vol", last_message)
-                update_graphs("vol")
+                if time.monotonic() - LAST_VOL_TIME >= 3:
+                    log_event("vol", "Tentative de vol", last_message)
+                    update_graphs("vol")
+                    LAST_VOL_TIME = time.monotonic()
                 READ_HISTORY = None
 
-            elif len(READ_HISTORY) >= 5:
+            elif len(READ_HISTORY) >= 3:
                 log_event("pile", "Dépôt de lettre", last_message)
                 log_event("lettres", "Dépôt de lettre", last_message)
                 update_graphs("depot")
                 READ_HISTORY = None
 
         #nouveau depots
-        elif tof is not None and 40 < tof < 0.4 * MAXIMUM:
+        elif (tof is not None and tof < 0.8 * MAXIMUM) and on == 1:
             READ_HISTORY = []
 
         #recuperation du courrier dans la boite
-        elif tof is None or tof == 0 or tof > MAXIMUM:
-            clear_csv("pile") #si la boite est vide on retire la pile
-            log_event("lettres", "Récupération du courrier", last_message)
-            update_graphs("recuperation")
-
+        elif (tof is None or tof == 0 or tof < 0.8*MAXIMUM) and on == 0:  
+            if time.monotonic() - LAST_RECUPERATION_TIME >= 10:
+                clear_csv("pile")
+                log_event("lettres", "Récupération du courrier", last_message)
+                update_graphs("recuperation")
+                LAST_RECUPERATION_TIME = time.monotonic()
+                        
+            
         #changer le maximum du TOF
         TOF_HISTORY.append(last_message)
-        if len(TOF_HISTORY) > 20:
+        if len(TOF_HISTORY) > 10:
             TOF_HISTORY.pop(0)
         valid_tof = [int(msg["TOF"]) for msg in TOF_HISTORY if msg.get("TOF") is not None and int(msg["TOF"]) > 0] #on prend la valeur la plus élevé des 20 dernières valeurs
         if valid_tof:
@@ -143,6 +153,11 @@ def get_history():
 @app.route("/graph/<filename>")
 def graph_file(filename):
     return send_from_directory("graph", filename)
+
+@app.route("/api/letters")
+def get_letters():
+    return jsonify({"count": count_letters()})
+
 
 
 if __name__ == "__main__":

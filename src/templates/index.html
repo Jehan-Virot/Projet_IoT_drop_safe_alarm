@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alarme de la boîte aux lettres</title>
+    <title>Superviseur de boîte aux lettres</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
 </head>
 <body>
@@ -13,8 +13,17 @@
         <!-- Module 1 : Alarme -->
         <section class="module alarm-module">
             <h1>Alarme de la boîte aux lettres</h1>
-            <p>Contrôle du système de surveillance</p>
+            <p>Contrôle de l'alarme</p>
+
             <button id="alarmButton">Chargement...</button>
+
+            <div class="letter-counter">
+                <div>
+                    <p>Courriers actuellement dans la boîte</p>
+                    <strong id="letterCount">0</strong>
+                    <span>Lettres</span>
+                </div>
+            </div>
         </section>
 
         <!-- Module 2 : Historique -->
