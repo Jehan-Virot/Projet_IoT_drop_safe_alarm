@@ -9,9 +9,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         client = self.request
         address = self.client_address
-
-        print(f"[TCP] Connexion : {address}")
-
+        print(f"[TCP] Connexion : {address}") 
         with self.server.clients_lock:
             self.server.clients.add(client)
 
@@ -63,14 +61,11 @@ class TCPServer:
             TCPHandler
         )
 
-        # Les attributs sont accessibles depuis TCPHandler
         self.server.clients = self.clients
         self.server.clients_lock = self.clients_lock
         self.server.messages = self.messages
-
         self.server.allow_reuse_address = True
         self.server.daemon_threads = True
-
         self.thread = None
 
     def start(self):
@@ -78,15 +73,12 @@ class TCPServer:
             target=self.server.serve_forever,
             daemon=True
         )
-
         self.thread.start()
-
         print(f"[TCP] Serveur actif sur {self.host}:{self.port}")
 
     def stop(self):
         self.server.shutdown()
         self.server.server_close()
-
         print("[TCP] Serveur arrêté")
 
     def read(self):
@@ -95,10 +87,8 @@ class TCPServer:
     def write(self, data):
         if not isinstance(data, str) or not data.strip():
             return False
-
         message = data.strip() + "\n"
         encoded_message = message.encode("utf-8")
-
         sent = 0
 
         with self.clients_lock:

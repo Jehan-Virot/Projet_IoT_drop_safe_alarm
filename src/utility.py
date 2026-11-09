@@ -53,10 +53,6 @@ def trim_csv(filename, max_rows=500):
         writer.writerow(header)
         writer.writerows(recent_rows)
         
-        
-import csv
-import os
-
 def count_letters():
     path = "data/lettres.csv"
     if not os.path.exists(path):

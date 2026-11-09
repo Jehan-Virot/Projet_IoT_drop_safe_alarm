@@ -18,13 +18,14 @@ app = Flask(__name__)
 tcp = TCPServer(host="0.0.0.0", port=8002)
 tcp.start()
 
+#route vers l'index
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html")
+    return render_template("index.html") #applique l'html de l'index du site
 
 
-
-@app.route("/api/data", methods=["GET"])
+#route vers l'api pour recup les données + faire la logique
+@app.route("/api/data", methods=["GET"]) 
 def read_tcp():
 
     global MAXIMUM, READ_HISTORY
@@ -107,7 +108,7 @@ def read_tcp():
         "ON": on
     }) 
 
-
+#route pour envoyer avec le bouton la commande pour desactiver l'alarme
 @app.route("/api/command", methods=["POST"])
 def write_tcp():
 
@@ -133,7 +134,7 @@ def write_tcp():
         "sent": command
     })
     
-    
+#route pour la logique de l'evenement
 @app.route("/api/history")
 def get_history():
     events = []
@@ -149,11 +150,12 @@ def get_history():
 
     return jsonify(events[:10])
 
-
+#graphs
 @app.route("/graph/<filename>")
 def graph_file(filename):
     return send_from_directory("graph", filename)
 
+#nb lettres
 @app.route("/api/letters")
 def get_letters():
     return jsonify({"count": count_letters()})
@@ -162,7 +164,7 @@ def get_letters():
 
 if __name__ == "__main__":
     app.run(
-        host="0.0.0.0",
+        host="0.0.0.0", #ne pas changer, ca conteneur
         port=8000,
         debug=False,
         use_reloader=False

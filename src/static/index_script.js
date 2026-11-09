@@ -4,7 +4,7 @@ const historySection = document.getElementById("history");
 const historyList = document.getElementById("historyList");
 const letterCount = document.getElementById("letterCount");
 
-// Mise à jour de l'état de l'alarme
+//mise à jour de l'état de l'alarme
 async function refreshData() {
     try {
         const response = await fetch("/api/data");
@@ -23,7 +23,7 @@ async function refreshData() {
     }
 }
 
-// Envoi de la commande "a"
+//activation et desactivation de l'alarme
 alarmButton.addEventListener("click", async () => {
     alarmButton.disabled = true;
 
@@ -42,7 +42,7 @@ alarmButton.addEventListener("click", async () => {
     }
 });
 
-// Affichage des 10 derniers événements
+//affiche les 10 derniers evenements
 historyButton.addEventListener("click", async () => {
     historySection.hidden = !historySection.hidden;
 
@@ -68,6 +68,7 @@ historyButton.addEventListener("click", async () => {
         historyList.innerHTML = "<li>Impossible de charger l'historique.</li>";
     }
 });
+//change dynamiquement l'affichage du nombre de lettre 
 async function refreshLetters() {
     try {
         const response = await fetch("/api/letters");
@@ -78,6 +79,8 @@ async function refreshLetters() {
         letterCount.textContent = "?";
     }
 }
+
+//refresh auto (2s pour les lettres et 1s pour l'historique)
 refreshLetters();
 setInterval(refreshLetters, 2000);
 refreshData();

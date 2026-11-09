@@ -9,13 +9,13 @@ GRAPH_DIR = "graph"
 def get_events(filename, event=None):
     path = f"data/{filename}.csv"
 
-    if not os.path.exists(path):
+    if not os.path.exists(path):  #ne pas retirer, sinon ca bug quand on lance le programme sans les csv . . .
         return []
 
     with open(path, "r", newline="") as file:
         rows = list(csv.DictReader(file))
 
-    if event is not None:
+    if event is not None: #ne pas retirer, important pour quand on reset les CSV
         rows = [row for row in rows if row["event"] == event]
 
     dates = []
