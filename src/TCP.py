@@ -36,7 +36,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
                     if message:
                         self.server.messages.append(message)
-                        print(f"[TCP] Reçu : {message}")
+                        print(f"{message}")
 
         except OSError as error:
             print(f"[TCP] Erreur : {error}")

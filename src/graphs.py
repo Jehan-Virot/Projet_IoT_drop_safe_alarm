@@ -30,7 +30,6 @@ def get_events(filename, event=None):
 
 def make_graph(dates, title, filename):
     os.makedirs(GRAPH_DIR, exist_ok=True)
-
     plt.figure()
     plt.plot(dates, range(1, len(dates) + 1), marker="o")
     plt.xlabel("Temps")

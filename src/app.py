@@ -4,7 +4,7 @@ from utility import log_event, clear_csv
 import json
 import csv
 import os
-
+from graphs import update_graphs
 MAXIMUM = 260 #maximum du TOF qui sera changer dynamiquement
 TOF_HISTORY = []      #historique des 20 dernières mesure pour changer le maximum dynamiquement
 READ_HISTORY = None   #attend 5 fois après une detection d'une lettre au cas ou le pir detecte en retard la main
@@ -61,7 +61,7 @@ def read_tcp():
         #detection des depots
         elif READ_HISTORY is not None:
             READ_HISTORY.append(last_message)
-            if pir == 1:
+            if pir == 1 and on == 1:
                 log_event("vol", "Tentative de vol", last_message)
                 update_graphs("vol")
                 READ_HISTORY = None
@@ -73,7 +73,7 @@ def read_tcp():
                 READ_HISTORY = None
 
         #nouveau depots
-        elif tof is not None and 40 < tof < 0.5 * MAXIMUM:
+        elif tof is not None and 40 < tof < 0.4 * MAXIMUM:
             READ_HISTORY = []
 
         #recuperation du courrier dans la boite
